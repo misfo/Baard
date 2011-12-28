@@ -5,7 +5,8 @@
 (defn pattern [req]
   (vec (cons
     (:request-method req)
-    (remove #{""} (s/split (:uri req) #"/")))))
+    (for [seg (s/split (:uri req) #"/") :when (not (#{""} seg))]
+      (java.net.URLDecoder/decode seg "UTF-8")))))
 
 (defn delegate [handler & args]
   (fn [req]
